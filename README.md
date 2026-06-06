@@ -160,8 +160,6 @@ Roadmap detalhado: [`docs/roadmap.md`](./docs/roadmap.md)
 
 ## Screenshots
 
-> Placeholders — substitua pelas imagens reais do aplicativo antes de publicar.
-
 | Tela | Descrição |
 |---|---|
 | ![Home](./assets/screenshots/home.png) | **Tela inicial** — hub central com acesso a todos os módulos |
