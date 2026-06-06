@@ -1,0 +1,13 @@
+# Placeholders de screenshots
+#
+# Adicione as imagens reais do aplicativo nesta pasta:
+#
+#   banner.png      — Banner principal (1200×400 recomendado)
+#   home.png        — Tela inicial / hub de módulos
+#   animais.png     — Listagem e cadastro de animais
+#   gestacao.png    — Módulo de reprodução e gestações
+#   financeiro.png  — Dashboard financeiro com KPIs
+#   contratos.png   — Gestão documental e contratos
+#   relatorios.png  — Relatórios consolidados
+#
+# Dica: oculte ou anonimize dados reais antes de publicar.
