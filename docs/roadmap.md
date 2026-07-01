@@ -2,26 +2,50 @@
 
 Visão de evolução do produto, organizada por horizonte temporal e impacto esperado. Este documento reflete o planejamento estratégico baseado em feedback operacional, tendências do setor e oportunidades de transformação digital.
 
+**Versão atual em produção:** `1.6.3` (app Android + painel web)
+
 ---
 
 ## Estado Atual
 
-O Haras Manager encontra-se em **produção ativa**, com os seguintes módulos entregues e operacionais:
+O Haras Manager encontra-se em **produção ativa**, com app na **Google Play Store** e painel web em [harasbroglio.com.br](https://harasbroglio.com.br).
 
-| Módulo | Status |
+| Módulo / Entrega | Status |
 |---|---|
-| Gestão de Animais | ✅ Entregue |
-| Reprodução e Gestações | ✅ Entregue |
-| Saúde Animal | ✅ Entregue |
-| Financeiro com Dashboard | ✅ Entregue |
-| Insumos e Custos | ✅ Entregue |
-| Clientes | ✅ Entregue |
-| Contratos PDF | ✅ Entregue |
-| Catálogos Comerciais | ✅ Entregue |
-| Lembretes e Notificações | ✅ Entregue |
-| Relatórios | ✅ Entregue |
-| Sincronização Offline | ✅ Entregue |
+| Gestão de Animais | ✅ Entregue (app + web) |
+| Reprodução e Gestações | ✅ Entregue (app + web) |
+| Saúde Animal | ✅ Entregue (app) |
+| Financeiro com Dashboard | ✅ Entregue (app + web) |
+| Insumos e Custos | ✅ Entregue (app + web) |
+| Clientes | ✅ Entregue (app + web) |
+| Contratos PDF | ✅ Entregue (app + web) |
+| Catálogos Comerciais PDF | ✅ Entregue (app + web) |
+| Lembretes e Notificações | ✅ Entregue (app + web) |
+| Sincronização Offline (mobile) | ✅ Entregue |
 | Atualização OTA (Android) | ✅ Entregue |
+| **Site institucional** | ✅ Entregue |
+| **Painel web (PWA)** | ✅ Entregue |
+| **Domínio harasbroglio.com.br** | ✅ Entregue |
+| **Assinatura Google Play** | ✅ Entregue |
+| **Cupons premium (Firestore)** | ✅ Entregue |
+| **Gate de assinatura na web** | ✅ Entregue |
+| **Exclusão de conta (web)** | ✅ Entregue |
+| Cloud Functions (inicial) | ✅ Entregue |
+
+---
+
+## Entregas Recentes (v1.6.x)
+
+| Entrega | Descrição |
+|---|---|
+| Painel web completo | Módulos espelhando o app, PDF no navegador |
+| PWA instalável | Manifest, service worker, atalho desktop |
+| Assinatura Play Store | Trial, paywall, vínculo por UID |
+| Cupons web | Resgate lifetime multi-uso alinhado ao app |
+| UI login/cadastro | Tema escuro, card branco, CTA Play Store |
+| PDF web | Layout corrigido (capa, cabeçalho, ficha animal) |
+| Gestação | Edição de cruzamento no painel |
+| Perfil web | Exclusão de conta, termos, segurança |
 
 ---
 
@@ -39,8 +63,6 @@ O Haras Manager encontra-se em **produção ativa**, com os seguintes módulos e
 | Filtros avançados | Por animal, cliente, raça, status | Análises segmentadas |
 | Exportação de dashboards | PDF e imagem dos painéis | Compartilhamento com stakeholders |
 
-**Competências envolvidas:** Engenharia de Dados, UX, Desenvolvimento Flutter
-
 ---
 
 ### Melhorias de UX e Performance
@@ -51,10 +73,23 @@ O Haras Manager encontra-se em **produção ativa**, com os seguintes módulos e
 | Busca global | Pesquisa unificada across módulos |
 | Atalhos na home | Widgets configuráveis pelo gestor |
 | Otimização de sync | Redução de consumo de dados e bateria |
+| Screenshots do painel web | Material visual para showcase e marketing |
 
 ---
 
 ## Horizonte 2 — Médio Prazo (6–12 meses)
+
+### Pagamento na Web
+
+**Objetivo:** Assinatura direta no painel, sem depender exclusivamente da Play Store.
+
+| Aspecto | Descrição |
+|---|---|
+| **Gateway** | Stripe ou Mercado Pago |
+| **Backend** | Cloud Functions para webhooks |
+| **Entitlement** | Mesmo modelo Firestore do app |
+
+---
 
 ### IA para Análise Operacional
 
@@ -64,11 +99,8 @@ O Haras Manager encontra-se em **produção ativa**, com os seguintes módulos e
 |---|---|---|
 | **Análise de custos** | Identificação automática de anomalias em despesas | Alertas proativos de overspending |
 | **Recomendações reprodutivas** | Sugestões de cruzamentos baseadas em histórico | Otimização genética e comercial |
-| **Assistente operacional** | Chatbot para consultas rápidas ("Quantas éguas prenhas?") | Agilidade na operação diária |
-| **Classificação automática** | Categorização inteligente de despesas | Redução de trabalho manual |
+| **Assistente operacional** | Chatbot para consultas rápidas | Agilidade na operação diária |
 | **Resumo executivo** | Relatório narrativo gerado por IA sobre o período | Comunicação com investidores/sócios |
-
-**Competências envolvidas:** Machine Learning, NLP, Integração Firebase AI, Engenharia de Prompts
 
 **Abordagem técnica prevista:**
 
@@ -81,23 +113,16 @@ Dados operacionais → Processamento → Modelo de IA → Insights acionáveis
 
 ### Indicadores Preditivos
 
-**Objetivo:** Antecipar cenários operacionais e financeiros com base em dados históricos.
-
 | Indicador | Descrição |
 |---|---|
 | **Projeção de fluxo de caixa** | Estimativa de receitas e despesas para próximos 3–6 meses |
 | **Previsão de partos** | Calendário preditivo com base em histórico reprodutivo |
 | **Custo por animal** | Projeção de custo total de manutenção por equino |
-| **Tendência de vendas** | Análise de sazonalidade e pipeline comercial |
 | **Alertas preditivos** | Notificações antecipadas de marcos críticos |
-
-**Competências envolvidas:** Análise Preditiva, Estatística, Data Engineering
 
 ---
 
 ### Gestão de Estoque
-
-**Objetivo:** Controle formal de insumos com alertas de reposição e rastreabilidade.
 
 | Funcionalidade | Descrição |
 |---|---|
@@ -105,36 +130,10 @@ Dados operacionais → Processamento → Modelo de IA → Insights acionáveis
 | Controle de quantidade | Entrada, saída e saldo atual |
 | Alerta de estoque mínimo | Notificação quando item atinge limite |
 | Vinculação com custos | Integração automática com módulo financeiro |
-| Histórico de consumo | Análise de padrões de uso por período |
-
-**Competências envolvidas:** Engenharia de Processos, Modelagem de Dados, UX
 
 ---
 
 ## Horizonte 3 — Longo Prazo (12–24 meses)
-
-### Aplicativo Web
-
-**Objetivo:** Expandir o acesso para desktop e equipes administrativas.
-
-| Aspecto | Descrição |
-|---|---|
-| **Plataforma** | Progressive Web App (PWA) ou Flutter Web |
-| **Público-alvo** | Gestores, contadores, veterinários, equipe administrativa |
-| **Funcionalidades prioritárias** | Dashboards, relatórios, gestão financeira, contratos |
-| **Sincronização** | Mesma base de dados Firebase, tempo real |
-| **Autenticação** | SSO com contas existentes do mobile |
-
-**Benefícios esperados:**
-
-- Gestão multi-dispositivo sem perda de contexto
-- Telas maiores para análises complexas e edição de documentos
-- Acesso para stakeholders que não operam em campo
-- Redução de dependência exclusiva do smartphone
-
-**Competências envolvidas:** Desenvolvimento Web, Responsive Design, DevOps
-
----
 
 ### Integração Financeira
 
@@ -143,35 +142,38 @@ Dados operacionais → Processamento → Modelo de IA → Insights acionáveis
 | Integração | Descrição |
 |---|---|
 | **Conciliação bancária** | Importação de extratos e matching automático |
-| **ERP/contabilidade** | Exportação para sistemas contábeis (Omie, Conta Azul) |
-| **Gateway de pagamento** | Recebimento online de parcelas de vendas |
+| **ERP/contabilidade** | Exportação para sistemas contábeis |
 | **Nota fiscal eletrônica** | Emissão de NF-e integrada às vendas |
 | **Open Finance** | Consulta de saldos e movimentações via APIs bancárias |
 
-**Competências envolvidas:** Integração de Sistemas, Compliance Financeiro, APIs REST
+---
+
+### Validação Server-Side Play Store
+
+**Objetivo:** Verificação de assinatura via Google Play Developer API nas Cloud Functions (anti-fraude).
 
 ---
 
 ## Visão de Produto
 
-### Posicionamento Futuro
+### Posicionamento
 
 ```
-                    HOJE                          FUTURO
-         ┌─────────────────────┐      ┌─────────────────────────┐
-         │   App Mobile        │      │   Plataforma Integrada  │
-         │   Offline-first     │ ───► │   Mobile + Web + IA     │
-         │   Gestão Operacional│      │   Inteligência de Negócio│
-         └─────────────────────┘      └─────────────────────────┘
+         ANTES (2024)                    HOJE (2026)                    FUTURO
+┌─────────────────────┐      ┌─────────────────────────┐      ┌─────────────────────────┐
+│   App Mobile        │      │   Plataforma Híbrida    │      │   Plataforma Integrada  │
+│   Offline-first     │ ───► │   Mobile + Web + Play   │ ───► │   Mobile + Web + IA     │
+│   Gestão Operacional│      │   Assinatura + Cupons   │      │   Inteligência de Negócio│
+└─────────────────────┘      └─────────────────────────┘      └─────────────────────────┘
 ```
 
 ### Princípios de Evolução
 
 1. **Incremental** — cada entrega agrega valor sem disruptar operação existente
 2. **Data-driven** — decisões de produto baseadas em métricas de uso e feedback
-3. **Offline-first mantido** — conectividade nunca será pré-requisito para operação
+3. **Offline-first mantido** — conectividade nunca será pré-requisito no mobile
 4. **Segurança primeiro** — novas integrações seguem princípios de least privilege
-5. **Experiência unificada** — consistência visual e funcional entre plataformas
+5. **Experiência unificada** — consistência entre app e painel web
 
 ---
 
@@ -180,10 +182,11 @@ Dados operacionais → Processamento → Modelo de IA → Insights acionáveis
 | Iniciativa | Impacto | Esforço | Prioridade |
 |---|---|---|---|
 | Dashboards avançados | Alto | Médio | 🔴 Alta |
+| Pagamento na web | Alto | Médio | 🔴 Alta |
+| Validação server-side Play | Alto | Médio | 🟡 Média |
 | IA para análise operacional | Alto | Alto | 🟡 Média |
 | Indicadores preditivos | Alto | Alto | 🟡 Média |
 | Gestão de estoque | Médio | Médio | 🟡 Média |
-| Aplicativo Web | Alto | Alto | 🟢 Planejada |
 | Integração financeira | Alto | Muito Alto | 🟢 Planejada |
 
 ---
@@ -194,8 +197,9 @@ Dados operacionais → Processamento → Modelo de IA → Insights acionáveis
 |---|---|---|
 | Tempo médio de cadastro de animal | ~5 min | < 3 min |
 | Adoção do módulo financeiro | — | > 80% dos usuários ativos |
-| Operações offline vs. online | — | > 30% offline |
-| Relatórios gerados por mês | — | > 50 por usuário ativo |
+| Uso do painel web | — | > 40% dos usuários ativos |
+| Operações offline vs. online | — | > 30% offline (mobile) |
+| PDFs gerados por mês | — | > 50 por usuário ativo |
 | NPS do produto | — | > 8.0 |
 
 ---

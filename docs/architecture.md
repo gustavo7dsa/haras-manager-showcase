@@ -16,13 +16,14 @@ Documento técnico de referência sobre a arquitetura do sistema. Descreve decis
 8. [APIs REST — Integrações Externas](#8-apis-rest--integrações-externas)
 9. [Sincronização Offline-First](#9-sincronização-offline-first)
 10. [Organização por Features](#10-organização-por-features)
-11. [Decisões Arquiteturais](#11-decisões-arquiteturais)
+11. [Plataforma Web](#11-plataforma-web)
+12. [Decisões Arquiteturais](#12-decisões-arquiteturais)
 
 ---
 
 ## 1. Visão Geral
 
-O Haras Manager foi projetado como uma aplicação mobile **offline-first**, com arquitetura em camadas e organização por domínios de negócio (features). A solução equilibra:
+O Haras Manager foi projetado como uma aplicação **offline-first** no mobile, com **painel web** complementar, arquitetura em camadas e organização por domínios de negócio (features). A solução equilibra:
 
 - **Experiência do usuário** — interface responsiva e operação em campo
 - **Confiabilidade de dados** — sincronização robusta entre local e nuvem
@@ -32,35 +33,27 @@ O Haras Manager foi projetado como uma aplicação mobile **offline-first**, com
 ### Diagrama de Alto Nível
 
 ```
+┌──────────────────────┐     ┌──────────────────────┐
+│   DISPOSITIVO MOBILE   │     │   NAVEGADOR (WEB)    │
+│  ┌──────────────────┐  │     │  ┌────────────────┐  │
+│  │  Apresentação    │  │     │  │ Painel SPA     │  │
+│  │  Flutter/Riverpod│  │     │  │ ES modules JS  │  │
+│  └────────┬─────────┘  │     │  └───────┬────────┘  │
+│           ▼            │     │          │           │
+│  ┌──────────────────┐  │     │          │           │
+│  │ Domínio · Dados  │  │     │          │           │
+│  │ Hive · Sync Queue│  │     │          │           │
+│  └────────┬─────────┘  │     │          │           │
+└───────────┼────────────┘     └──────────┼───────────┘
+            │                             │
+            └──────────────┬──────────────┘
+                           ▼
 ┌──────────────────────────────────────────────────────────────────┐
-│                         DISPOSITIVO MOBILE                       │
-│  ┌────────────────────────────────────────────────────────────┐  │
-│  │                    CAMADA DE APRESENTAÇÃO                │  │
-│  │         Pages · Widgets · Providers (Riverpod)             │  │
-│  └──────────────────────────┬─────────────────────────────────┘  │
-│                             │                                    │
-│  ┌──────────────────────────▼─────────────────────────────────┐  │
-│  │                      CAMADA DE DOMÍNIO                       │  │
-│  │           Entities · Use Cases · Repository Interfaces       │  │
-│  └──────────────────────────┬─────────────────────────────────┘  │
-│                             │                                    │
-│  ┌──────────────────────────▼─────────────────────────────────┐  │
-│  │                       CAMADA DE DADOS                        │  │
-│  │     Repository Impl · Data Sources · Models · Adapters       │  │
-│  └──────────────┬─────────────────────────────┬─────────────────┘  │
-│                 │                             │                    │
-│  ┌──────────────▼──────────┐   ┌──────────────▼─────────────────┐  │
-│  │     Hive (Local)        │   │   Sync Queue · Metadata        │  │
-│  │   Cache · Offline       │   │   Fila de sincronização        │  │
-│  └─────────────────────────┘   └────────────────────────────────┘  │
-└──────────────────────────────┬───────────────────────────────────┘
-                               │ Conectividade
-┌──────────────────────────────▼───────────────────────────────────┐
 │                        SERVIÇOS EXTERNOS                         │
 │  ┌─────────────┐  ┌─────────────┐  ┌──────────────────────────┐  │
-│  │  Firebase   │  │  REST APIs  │  │  Serviços de Terceiros   │  │
-│  │ Auth · DB   │  │  Boletos    │  │  Notificações · Storage  │  │
-│  │  Storage    │  │  OTA Update │  │                          │  │
+│  │  Firebase   │  │  REST APIs  │  │  Google Play Billing     │  │
+│  │ Auth·DB·Host│  │  Boletos    │  │  Assinatura premium      │  │
+│  │  Storage·Fn │  │  OTA Update │  │                          │  │
 │  └─────────────┘  └─────────────┘  └──────────────────────────┘  │
 └──────────────────────────────────────────────────────────────────┘
 ```
@@ -280,6 +273,8 @@ O **Firebase** compõe a infraestrutura de backend, autenticação e armazenamen
 | **Authentication** | Login com e-mail/senha e Google Sign-In |
 | **Cloud Firestore** | Banco de dados NoSQL em tempo real |
 | **Cloud Storage** | Armazenamento de fotos, PDFs e documentos |
+| **Firebase Hosting** | Site institucional e painel web |
+| **Cloud Functions** | Operações server-side complementares |
 | **Security Rules** | Isolamento de dados por usuário autenticado |
 
 ### Modelo de Dados na Nuvem
@@ -426,6 +421,7 @@ features/
 | `reminders` | Lembretes e alertas |
 | `reports` | Relatórios consolidados |
 | `auth` | Autenticação e perfil |
+| `subscription` | Assinatura Play Store e cupons premium |
 | `app_update` | Atualização OTA |
 
 ### Serviços Compartilhados (Core)
@@ -440,7 +436,38 @@ features/
 
 ---
 
-## 11. Decisões Arquiteturais
+## 11. Plataforma Web
+
+O painel web complementa o app mobile sem duplicar a base de dados.
+
+### Estrutura
+
+| Componente | Responsabilidade |
+|---|---|
+| **Hosting** | Landing, auth pages, painel SPA, páginas legais |
+| **Painel (`/js/panel/`)** | Views por módulo, serviços Firestore, PDF generators |
+| **PWA** | Manifest + service worker para instalação |
+| **Subscription gate** | Validação de entitlement antes do acesso |
+
+### Sincronização App ↔ Web
+
+- Ambos leem/escrevem no mesmo path `users/{uid}/...` no Firestore
+- Listeners em tempo real no painel; fila offline no app
+- PDFs gerados em qualquer plataforma sobem para Storage
+
+### Geração de PDF Web
+
+Módulo `catalog-pdf/` espelha widgets Flutter:
+
+- Layout top-down com métricas de fonte (Noto Sans)
+- Embutimento de imagens via Storage (CORS)
+- Upload do resultado para nuvem
+
+Documentação: [`web-platform.md`](./web-platform.md)
+
+---
+
+## 12. Decisões Arquiteturais
 
 Registro das principais decisões técnicas e suas justificativas.
 
@@ -454,6 +481,9 @@ Registro das principais decisões técnicas e suas justificativas.
 | **Offline-first** | Online-only | Operação em áreas rurais com conectividade instável |
 | **Feature modules** | Layer modules | Coesão de domínio, equipes paralelas, isolamento |
 | **PDF nativo** | WebView, templates HTML | Controle total de layout, performance, offline |
+| **Painel JS vanilla** | Flutter Web | Bundle leve, iteração rápida, foco desktop |
+| **Firebase Hosting** | Vercel, VPS | Integração nativa com Auth/Firestore do projeto |
+| **Play Billing** | Stripe in-app | Exigência e descoberta na Play Store |
 
 ---
 

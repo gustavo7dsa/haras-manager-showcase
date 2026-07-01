@@ -13,7 +13,9 @@ Documento de referência funcional do sistema, organizado por módulos de negóc
 5. [Gestão Operacional](#5-gestão-operacional)
 6. [Gestão Documental](#6-gestão-documental)
 7. [Dashboards](#7-dashboards)
-8. [Relatórios](#8-relatórios)
+8. [Exportação e Relatórios PDF](#8-exportação-e-relatórios-pdf)
+9. [Plataforma Web](#9-plataforma-web)
+10. [Assinatura Premium](#10-assinatura-premium)
 
 ---
 
@@ -69,6 +71,7 @@ Módulo dedicado ao acompanhamento reprodutivo de éguas, gestões de cruzamento
 | **Data estimada de parto** | Cálculo automático com base na inseminação |
 | **Status visual** | Indicadores claros: confirmado, aguardando confirmação |
 | **Ordenação inteligente** | Priorização por proximidade do parto |
+| **Edição de cruzamento** | Correção de garanhão, data e método após o registro |
 | **Catálogo de gestações PDF** | Geração de material comercial para potros/embriões |
 | **Relatório de gestações** | Consolidação para compartilhamento com equipe ou clientes |
 | **Integração com animais** | Sincronização bidirecional com cadastro do animal |
@@ -271,34 +274,100 @@ Painéis visuais que consolidam indicadores-chave para tomada de decisão rápid
 
 ---
 
-## 8. Relatórios
+## 8. Exportação e Relatórios PDF
 
 ### Visão Geral
 
-Capacidade de consolidar informações operacionais em formatos exportáveis e compartilháveis.
+Relatórios e materiais comerciais são gerados **dentro de cada módulo** (não há tela isolada de relatórios), em formatos exportáveis e compartilháveis.
 
-### Tipos de Relatório
+### Tipos de Documento
 
-| Relatório | Conteúdo | Formato |
-|---|---|---|
-| **Relatório completo de animais** | Cadastro, pedigree, saúde e status de cada animal | Texto compartilhável |
-| **Relatório de gestações** | Éguas prenhas, datas e status reprodutivo | Texto / WhatsApp |
-| **Relatório financeiro** | Demonstrativo mensal de receitas e despesas | PDF |
-| **Catálogo de animais** | Material comercial com fotos e dados | PDF |
-| **Catálogo de gestações** | Potros e embriões disponíveis | PDF |
+| Documento | Conteúdo | Formato | Onde |
+|---|---|---|---|
+| **Catálogo de animais** | Fotos, pedigree, valores e observações | PDF | App · Web |
+| **Catálogo de gestações** | Potros e embriões disponíveis | PDF | App · Web |
+| **Contrato de compra/venda** | Cláusulas, parcelas e identificação do animal | PDF | App · Web |
+| **Relatório financeiro** | Demonstrativo mensal de receitas e despesas | PDF | App · Web |
+| **Operação financeira** | Detalhamento de venda/aquisição com parcelas | PDF | App · Web |
+| **Listas por módulo** | Animais, vendas, gestações (texto) | Texto / WhatsApp | App · Web |
 
 ### Funcionalidades Transversais
 
-- Geração sob demanda
+- Geração sob demanda no dispositivo ou navegador
 - Compartilhamento nativo (WhatsApp, e-mail, drive)
-- Data e hora de geração registradas
-- Formatação profissional padronizada
+- Armazenamento em nuvem com histórico do último PDF gerado
+- Layout profissional padronizado entre plataformas
+
+---
+
+## 9. Plataforma Web
+
+### Visão Geral
+
+Painel de gestão acessível em [harasbroglio.com.br/painel](https://harasbroglio.com.br/painel/), com os mesmos módulos do app e sincronização em tempo real via Firestore.
+
+### Funcionalidades
+
+| Funcionalidade | Descrição |
+|---|---|
+| **Painel SPA** | Navegação por módulos (animais, financeiro, gestações, etc.) |
+| **PWA instalável** | Uso como app no desktop ou celular |
+| **Login unificado** | Mesma conta Firebase do app Android |
+| **PDF no navegador** | Catálogos, contratos e relatórios sem depender do celular |
+| **Notificações web** | Lembretes no navegador (quando permitido) |
+| **Perfil e conta** | Dados do haras, exclusão de conta, aceite de termos |
+| **Gate de assinatura** | Acesso bloqueado sem premium ou cupom válido |
+
+### Site Institucional
+
+| Página | Finalidade |
+|---|---|
+| Landing | Apresentação do produto |
+| Login / Cadastro | Onboarding de novos haras |
+| Política de privacidade | Conformidade Play Store |
+| Exclusão de conta | Conformidade Play Store |
+
+Documentação técnica: [`web-platform.md`](./web-platform.md)
 
 ### Valor de Negócio
 
-- Comunicação estruturada com equipe, clientes e parceiros
-- Eliminação de relatórios manuais demorados
-- Material comercial de qualidade profissional
+- Gestão no escritório sem depender do smartphone
+- Equipe administrativa com acesso web
+- Material comercial gerado em telas maiores
+- Presença digital profissional com domínio próprio
+
+---
+
+## 10. Assinatura Premium
+
+### Visão Geral
+
+Modelo de monetização por assinatura no app Android, com cupons administráveis para acesso web e casos especiais.
+
+### App Android (Google Play)
+
+| Aspecto | Descrição |
+|---|---|
+| **Produto** | `haras_premium` — assinatura mensal |
+| **Trial** | Período gratuito configurado na Play Console |
+| **Vínculo** | Compra vinculada ao UID Firebase (não transfere entre contas) |
+| **Paywall** | Acesso ao app bloqueado sem assinatura ativa ou cupom |
+
+### Cupons (Firestore)
+
+| Tipo | Uso |
+|---|---|
+| **Trial estendido** | Dias adicionais de acesso |
+| **Lifetime** | Acesso permanente (single ou multi-uso) |
+| **Desconto** | Benefícios configuráveis por documento |
+
+Resgate disponível no app e no painel web. Regras de segurança no Firestore impedem fraude de resgate.
+
+### Valor de Negócio
+
+- Receita recorrente sustentável
+- Flexibilidade comercial via cupons
+- Controle de acesso unificado entre plataformas
 
 ---
 
@@ -317,8 +386,9 @@ Capacidade de consolidar informações operacionais em formatos exportáveis e c
            └───────────────┼───────────────┘
                            ▼
               ┌────────────────────────┐
-              │  Documentos · Reports  │
+              │  Documentos · PDFs     │
               │  Clientes · Lembretes  │
+              │  Web · Assinatura      │
               └────────────────────────┘
 ```
 
